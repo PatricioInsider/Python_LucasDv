@@ -1,5 +1,5 @@
 '''
-Vamos a solicitar al usuario 8 números enteros del 0 al 9. Se supone que son los números de su DNI, que guardaremos cada uno de los digitos de una entrada en una lista.
+Vamos a solicitar al usuario 10 números enteros del 0 al 9. Se supone que son los números de su DNI, que guardaremos cada uno de los digitos de una entrada en una lista.
 A continuación, con esos números calcularemos la letra correspondiente y la guardaremos en una variable.
 Finalmente, crearemos un diccionario con dos claves, cada una guardará, respectivamente, los números y la letra del DNI. Finalmente, mostraremos el diccionario resultante.
 '''
