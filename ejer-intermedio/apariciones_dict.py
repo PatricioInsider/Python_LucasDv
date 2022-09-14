@@ -12,14 +12,12 @@ def seens(cadena):
         if i not in myList and i != " ":
             #Metodo .upper(capitalizar un caracter) / Metodo .count(variable) sirve para contar las apariciones en un string el caracter variable
             dicc[i.upper()] = cadena.count(i)
+            myList.append(i)
     print(dicc)
 
 def run():
     
     cadena = str(input("Ingresa un string por teclado : "))
-    long = len(cadena)
-
-    
     seens(cadena)
 
 if __name__=='__main__':
