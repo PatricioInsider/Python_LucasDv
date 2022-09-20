@@ -4,10 +4,10 @@ Ayuda a Pyratilla a mostrar los datos de cada uno de los miembros de su tripulac
 '''
 
 def run():
-    datosPyratilla = {"age":17,"ocupation":"Capitan del barco"}
-    datosPyerce= {"age":16,"ocupation":"navegante del barco"}
+    datosPyratilla = {"age":17,"ocupation":"Capitan"}
+    datosPyerce= {"age":16,"ocupation":"navegante"}
     datosPym = {"age":16,"ocupation":"timonel"}
-    datosPyo = {"age":1.5,"ocupation":"loro del barco"}
+    datosPyo = {"age":1.5,"ocupation":"loro"}
     
     
     info_pyratilla= { "Pyratilla":datosPyratilla,
@@ -15,15 +15,7 @@ def run():
                      "Pym":datosPym,
                      "Pyo":datosPyo}
     for key,val in info_pyratilla.items():
-        print("{} tiene {} y es el {}".format(key,val["age"],val["ocupation"]))
+        print("{} tiene {} y es el {}".format(key,val["age"],val["ocupation"])) #otra forma de acceder a ese valor es conociendolo como matriz, asi ocupariamos info_pyratilla [key]["age"]
        
-    '''
-    for name in info_pyratilla.items():
-        for i in name.items():
-            print("El pirata {} tiene {} y es {}".format(i))
-    '''
-    
-        
-
 if __name__=='__main__':
     run()
