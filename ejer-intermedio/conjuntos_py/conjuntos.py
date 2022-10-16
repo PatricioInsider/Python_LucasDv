@@ -1,6 +1,12 @@
 
+
 def run():
-    print("Ya estamos progresando los archivos")
+    a =0
+    b= 23
+    
+    print(a,"Clases de conjuntos")
+    
+    print("Estamos infresando los datos")
     pass
 
 if __name__=='__main__':
