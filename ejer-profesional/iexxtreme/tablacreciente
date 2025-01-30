@@ -1,0 +1,61 @@
+def completar(matriz, N):
+    fila1 = list(matriz[0])
+    fila2 = list(matriz[1])
+    
+    usado = set(fila1 + fila2)
+    contador= 0
+    if len(fila1) < N:
+        disponible = set(range(1, 2*N + 1)) - usado
+        necesario = N - len(fila1)
+        nuevos = sorted(list(disponible))[:necesario]
+        fila1.extend(nuevos)
+        usado.update(nuevos)
+    contador += 1
+    
+    if len(fila2) < N:
+        disponible = set(range(1, 2*N + 1)) - usado
+        necesario = N - len(fila2)
+        nuevos = sorted(list(disponible))[:necesario]
+        fila2.extend(nuevos)
+    
+    fila1.sort()
+    fila2.sort()
+    contador += 1
+    
+    return contador
+
+
+def validarRan(Un, N):
+    for x in Un:
+        if not (0 <= x <= 2 * N):
+            print("Error de datos")
+            break
+
+def run():
+    N = int(input())
+    Un = []
+    for x in input().split():
+        Un.append(int(x))
+    B = []
+    for x in input().split():
+        B.append(int(x))
+    
+    #validamos que los numeros sean diferentes
+    assert 1 <= N <= 2000
+    validarRan(Un, N)
+    validarRan(B, N)
+    
+    Un = set(Un)
+    B = set(B)
+    aux = Un & B
+    if( len(aux) != 0):
+        Un.remove(aux)
+
+
+    matriz = [Un,B]
+    print(completar(matriz,N))
+
+
+
+if __name__ == "__main__":
+    run()
