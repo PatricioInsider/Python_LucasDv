@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detector de Phishing 🛡️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 1200px;
+            width: 95%;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px 0;
+            }
+            
+            .container {
+                width: 98%;
+                border-radius: 15px;
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 25px 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .header p {
+                font-size: 14px;
+            }
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px 15px;
+            }
+        }
+
+        .welcome-screen {
+            text-align: center;
+        }
+
+        .welcome-screen h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .welcome-screen p {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .welcome-image {
+            width: 250px;
+            height: 250px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 100px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .welcome-image {
+                width: 150px;
+                height: 150px;
+                font-size: 60px;
+            }
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .question-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 100px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .question-image {
+                height: 150px;
+                font-size: 60px;
+            }
+        }
+
+        .question-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%, transparent);
+            background-size: 20px 20px;
+        }
+
+        .example-box {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .example-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .example-text {
+            color: #666;
+            font-size: 13px;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .question-text {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .question-emoji {
+            font-size: 32px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-option {
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            border: 3px solid #e0e0e0;
+            background: white;
+            border-radius: 12px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .btn-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn-option {
+                min-width: 100%;
+                padding: 15px;
+                font-size: 16px;
+            }
+        }
+
+        .btn-option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .btn-option.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .btn-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #28a745;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 3px 10px rgba(40, 167, 69, 0.4);
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .results-container {
+            display: none;
+        }
+
+        .result-card {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            animation: slideIn 0.5s ease;
+        }
+
+        .result-card.danger {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+        }
+
+        .result-card.success {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+
+        .result-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+        }
+
+        .result-icon {
+            width: 100px;
+            height: 100px;
+            margin: 20px auto;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            animation: pulse 2s infinite;
+        }
+
+        .result-icon.danger {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .result-icon.success {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+
+        .rules-applied {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .rules-applied h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .rule-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid #667eea;
+            font-size: 14px;
+            color: #555;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-nav {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-back {
+            background: #e0e0e0;
+            border: none;
+            color: #333;
+        }
+
+        .btn-back:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+        }
+
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-next:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .tip-box {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .tip-box strong {
+            color: #2196F3;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .tip-box p {
+            color: #555;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Detector de Phishing</h1>
+            <p>Sistema Experto de Análisis de Correos Sospechosos</p>
+        </div>
+
+        <div class="content">
+            <!-- Pantalla de Bienvenida -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <div class="welcome-image">🕵️</div>
+                <h2>¡Bienvenido! 👋</h2>
+                <p>Este sistema te ayudará a identificar si un correo electrónico es potencialmente peligroso o fraudulento. Responde algunas preguntas sobre el correo que recibiste y te daremos un diagnóstico detallado.</p>
+                <button class="btn" onclick="startAnalysis()">Comenzar Análisis 🔍</button>
+            </div>
+
+            <!-- Contenedor de Preguntas -->
+            <div class="question-container" id="questionContainer">
+                <div class="progress-text" id="progressText">Pregunta 1 de 10</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                
+                <div class="question-card">
+                    <div class="question-image" id="questionImage">🔗</div>
+                    
+                    <div class="question-text">
+                        <span class="question-emoji" id="questionEmoji">🔗</span>
+                        <span id="questionText">¿El correo contiene un enlace sospechoso?</span>
+                    </div>
+
+                    <div id="examplesContainer"></div>
+
+                    <div class="btn-group">
+                        <button class="btn-option" onclick="selectAnswer('si')">✅ Sí</button>
+                        <button class="btn-option" onclick="selectAnswer('no')">❌ No</button>
+                    </div>
+
+                    <div id="tipContainer"></div>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button class="btn-nav btn-back" onclick="previousQuestion()" id="btnBack">⬅️ Anterior</button>
+                    <button class="btn-nav btn-next" onclick="nextQuestion()" id="btnNext" disabled>Siguiente ➡️</button>
+                </div>
+            </div>
+
+            <!-- Contenedor de Resultados -->
+            <div class="results-container" id="resultsContainer">
+                <div id="resultsContent"></div>
+                <button class="btn" onclick="resetAnalysis()" style="width: 100%; margin-top: 20px;">🔄 Analizar Otro Correo</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { 
+                key: "tiene_enlace_sospechoso", 
+                text: "¿El correo contiene un enlace sospechoso?", 
+                emoji: "🔗",
+                imageEmoji: "🔗",
+                examples: [
+                    { icon: "⚠️", text: "http://goog1e.com/reset-password" },
+                    { icon: "⚠️", text: "http://paypa1-security.xyz/verify" }
+                ],
+                tip: "Los enlaces sospechosos suelen tener errores en el nombre del dominio (ej: 'goog1e' en lugar de 'google') o usar dominios extraños (.xyz, .tk)"
+            },
+            { 
+                key: "dominio_desconocido", 
+                text: "¿El dominio del enlace o remitente es desconocido?", 
+                emoji: "🌐",
+                imageEmoji: "🌐",
+                examples: [
+                    { icon: "❌", text: "info@banco-seguridad123.tk" },
+                    { icon: "✅", text: "soporte@gmail.com" }
+                ],
+                tip: "Los dominios legítimos usan extensiones conocidas (.com, .org) y nombres de empresas reales sin números raros"
+            },
+            { 
+                key: "solicita_datos_personales", 
+                text: "¿El correo pide datos personales o contraseñas?", 
+                emoji: "🔐",
+                imageEmoji: "🔐",
+                examples: [
+                    { icon: "🚨", text: "Ingrese su clave de 4 dígitos para verificar..." },
+                    { icon: "🚨", text: "Confirme su número de tarjeta aquí..." }
+                ],
+                tip: "¡NUNCA compartas contraseñas, números de tarjeta o datos bancarios por email! Los bancos NUNCA piden esto"
+            },
+            { 
+                key: "urgencia_mensaje", 
+                text: "¿El mensaje transmite urgencia?", 
+                emoji: "⚠️",
+                imageEmoji: "⏰",
+                examples: [
+                    { icon: "⚡", text: "¡ÚLTIMA OPORTUNIDAD! Expira en 24 horas" },
+                    { icon: "⚡", text: "URGENTE: Su cuenta será bloqueada HOY" }
+                ],
+                tip: "Los estafadores usan urgencia para que actúes sin pensar. Tómate tu tiempo para verificar"
+            },
+            { 
+                key: "errores_ortograficos", 
+                text: "¿El correo tiene errores de ortografía?", 
+                emoji: "📝",
+                imageEmoji: "✍️",
+                examples: [
+                    { icon: "❌", text: "Acseda a su bonoo ahorra mismo" },
+                    { icon: "❌", text: "Felicdades! Ganste un premio" }
+                ],
+                tip: "Las empresas legítimas revisan sus correos. Muchos errores = correo sospechoso"
+            },
+            { 
+                key: "archivo_adjunto", 
+                text: "¿El correo trae un archivo adjunto?", 
+                emoji: "📎",
+                imageEmoji: "📎",
+                examples: [
+                    { icon: "⚠️", text: "factura_urgente.exe" },
+                    { icon: "⚠️", text: "documento_importante.docm" }
+                ],
+                tip: "No abras archivos .exe, .zip, .docm de desconocidos. Pueden contener virus"
+            },
+            { 
+                key: "promesa_dinero", 
+                text: "¿El correo promete dinero o premios?", 
+                emoji: "💰",
+                imageEmoji: "💰",
+                examples: [
+                    { icon: "🎰", text: "¡Ganaste $5,000 USD! Reclama ya" },
+                    { icon: "🎁", text: "Eres el ganador #1,000,000 de iPhone" }
+                ],
+                tip: "Si parece demasiado bueno para ser verdad... probablemente es una estafa"
+            },
+            { 
+                key: "imitacion_empresa", 
+                text: "¿El correo dice ser de una empresa conocida?", 
+                emoji: "🏢",
+                imageEmoji: "🏢",
+                examples: [
+                    { icon: "🏦", text: "De: Banco Nacional" },
+                    { icon: "📦", text: "De: Amazon Customer Service" }
+                ],
+                tip: "Verifica siempre el email del remitente. Los estafadores imitan empresas conocidas"
+            },
+            { 
+                key: "direccion_remitente_rara", 
+                text: "¿El remitente tiene una dirección rara o poco creíble?", 
+                emoji: "📧",
+                imageEmoji: "📧",
+                examples: [
+                    { icon: "❌", text: "soporte123@xyz-random456.tk" },
+                    { icon: "❌", text: "noreply789@secure-mail-xyz.com" }
+                ],
+                tip: "Las empresas reales usan dominios propios (ej: @amazon.com), no dominios genéricos extraños"
+            },
+            { 
+                key: "mensaje_no_esperado", 
+                text: "¿El correo es inesperado?", 
+                emoji: "❓",
+                imageEmoji: "❓",
+                examples: [
+                    { icon: "🤔", text: "Paquete pendiente (pero no pediste nada)" },
+                    { icon: "🤔", text: "Premio sorpresa (no participaste en sorteos)" }
+                ],
+                tip: "Si no esperabas el correo, sospecha. Contacta directamente a la empresa por otro medio"
+            }
+        ];
+
+        const reglas = [
+            { si: [["tiene_enlace_sospechoso", "si"], ["dominio_desconocido", "si"]], entonces: "El correo podría ser phishing: el enlace lleva a un dominio desconocido." },
+            { si: [["solicita_datos_personales", "si"], ["urgencia_mensaje", "si"]], entonces: "Alerta de phishing: intenta robar credenciales usando urgencia." },
+            { si: [["errores_ortograficos", "si"], ["imitacion_empresa", "si"]], entonces: "Probable phishing: imita a una empresa pero con errores de redacción." },
+            { si: [["archivo_adjunto", "si"], ["mensaje_no_esperado", "si"]], entonces: "Riesgo de malware: archivo adjunto sospechoso en correo no esperado." },
+            { si: [["promesa_dinero", "si"]], entonces: "Phishing clásico: promesa de dinero fácil." },
+            { si: [["imitacion_empresa", "si"], ["direccion_remitente_rara", "si"]], entonces: "Phishing: suplantación de identidad de empresa con remitente falso." },
+            { si: [["tiene_enlace_sospechoso", "si"], ["urgencia_mensaje", "si"]], entonces: "Phishing: enlace fraudulento con presión psicológica de urgencia." },
+            { si: [["mensaje_no_esperado", "si"], ["direccion_remitente_rara", "si"]], entonces: "Phishing potencial: correo no esperado de dirección extraña." },
+            { si: [["archivo_adjunto", "si"], ["errores_ortograficos", "si"]], entonces: "Phishing con malware: archivo adjunto disfrazado con mensaje mal escrito." },
+            { si: [["tiene_enlace_sospechoso", "si"], ["promesa_dinero", "si"]], entonces: "Phishing: enlace sospechoso que promete dinero o premios falsos." },
+            { si: [["solicita_datos_personales", "si"], ["mensaje_no_esperado", "si"]], entonces: "Phishing: solicita datos personales en correo inesperado." },
+            { si: [["promesa_dinero", "si"], ["direccion_remitente_rara", "si"]], entonces: "Estafa por promesa de dinero: remitente poco creíble." },
+            { si: [["archivo_adjunto", "si"], ["dominio_desconocido", "si"]], entonces: "Posible malware: adjunto proveniente de un dominio desconocido." },
+            { si: [["urgencia_mensaje", "si"], ["errores_ortograficos", "si"]], entonces: "Phishing urgente con redacción pobre: posible intento de engaño." }
+        ];
+
+        let currentQuestion = 0;
+        let answers = {};
+        let selectedAnswer = null;
+
+        function startAnalysis() {
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('questionContainer').style.display = 'block';
+            showQuestion(0);
+        }
+
+        function showQuestion(index) {
+            currentQuestion = index;
+            const question = questions[index];
+            
+            document.getElementById('questionImage').textContent = question.imageEmoji;
+            document.getElementById('questionEmoji').textContent = question.emoji;
+            document.getElementById('questionText').textContent = question.text;
+            document.getElementById('progressText').textContent = `Pregunta ${index + 1} de ${questions.length}`;
+            document.getElementById('progressFill').style.width = ((index + 1) / questions.length * 100) + '%';
+            
+            // Mostrar ejemplos
+            let examplesHTML = '';
+            if (question.examples && question.examples.length > 0) {
+                question.examples.forEach(example => {
+                    examplesHTML += `
+                        <div class="example-box">
+                            <div class="example-title">${example.icon} Ejemplo:</div>
+                            <div class="example-text">"${example.text}"</div>
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('examplesContainer').innerHTML = examplesHTML;
+
+            // Mostrar consejo
+            let tipHTML = '';
+            if (question.tip) {
+                tipHTML = `
+                    <div class="tip-box">
+                        <strong>💡 Consejo:</strong>
+                        <p>${question.tip}</p>
+                    </div>
+                `;
+            }
+            document.getElementById('tipContainer').innerHTML = tipHTML;
+            
+            // Restaurar respuesta previa si existe
+            const previousAnswer = answers[question.key];
+            document.querySelectorAll('.btn-option').forEach(btn => {
+                btn.classList.remove('selected');
+                if (previousAnswer && btn.textContent.includes(previousAnswer === 'si' ? 'Sí' : 'No')) {
+                    btn.classList.add('selected');
+                    selectedAnswer = previousAnswer;
+                }
+            });
+
+            // Actualizar botones de navegación
+            document.getElementById('btnBack').style.display = index === 0 ? 'none' : 'block';
+            document.getElementById('btnNext').textContent = index === questions.length - 1 ? 'Ver Resultados 🎯' : 'Siguiente ➡️';
+            document.getElementById('btnNext').disabled = !previousAnswer;
+        }
+
+        function selectAnswer(answer) {
+            selectedAnswer = answer;
+            answers[questions[currentQuestion].key] = answer;
+            
+            document.querySelectorAll('.btn-option').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            document.getElementById('btnNext').disabled = false;
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                showQuestion(currentQuestion + 1);
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                showQuestion(currentQuestion - 1);
+            }
+        }
+
+        function showResults() {
+            const diagnosticos = [];
+            const reglasActivadas = [];
+
+            reglas.forEach(regla => {
+                const cumple = regla.si.every(([key, valor]) => answers[key] === valor);
+                if (cumple && !diagnosticos.includes(regla.entonces)) {
+                    diagnosticos.push(regla.entonces);
+                    reglasActivadas.push(regla);
+                }
+            });
+
+            document.getElementById('questionContainer').style.display = 'none';
+            document.getElementById('resultsContainer').style.display = 'block';
+
+            let resultsHTML = '<h2 style="color: #333; margin-bottom: 20px; text-align: center;">📊 Resultados del Análisis</h2>';
+
+            if (diagnosticos.length === 0) {
+                resultsHTML += `
+                    <div class="result-icon success">✅</div>
+                    <div class="result-card success">
+                        <div class="result-title">✅ Correo Aparentemente Seguro</div>
+                        <p>No se detectó un patrón claro de phishing con la información proporcionada. Sin embargo, mantén siempre la precaución al abrir correos y verifica la identidad del remitente cuando tengas dudas.</p>
+                    </div>
+                `;
+            } else {
+                resultsHTML += `<div class="result-icon danger">🚨</div>`;
+                resultsHTML += `<h3 style="color: #dc3545; text-align: center; margin-bottom: 20px;">⚠️ ADVERTENCIA: ${diagnosticos.length} Amenaza${diagnosticos.length > 1 ? 's' : ''} Detectada${diagnosticos.length > 1 ? 's' : ''}</h3>`;
+                
+                diagnosticos.forEach((diag, idx) => {
+                    resultsHTML += `
+                        <div class="result-card danger">
+                            <div class="result-title">🚨 Alerta #${idx + 1}</div>
+                            <p>${diag}</p>
+                        </div>
+                    `;
+                });
+
+                resultsHTML += `
+                    <div class="tip-box" style="background: #fff3cd; border-left-color: #ffc107; margin-top: 20px;">
+                        <strong>⚠️ Recomendación:</strong>
+                        <p>NO hagas clic en enlaces, NO descargues archivos adjuntos, y NO proporciones información personal. Elimina este correo inmediatamente o repórtalo como spam/phishing.</p>
+                    </div>
+                `;
+
+                resultsHTML += '<div class="rules-applied"><h3>🔍 Reglas de Análisis Activadas</h3>';
+                reglasActivadas.forEach((regla, idx) => {
+                    const condiciones = regla.si.map(([k, v]) => {
+                        const q = questions.find(q => q.key === k);
+                        return `${q.text.replace('¿', '').replace('?', '')}`;
+                    }).join(' + ');
+                    resultsHTML += `<div class="rule-item"><strong>Regla ${idx + 1}:</strong> ${condiciones} → ${regla.entonces}</div>`;
+                });
+                resultsHTML += '</div>';
+            }
+
+            document.getElementById('resultsContent').innerHTML = resultsHTML;
+        }
+
+        function resetAnalysis() {
+            currentQuestion = 0;
+            answers = {};
+            selectedAnswer = null;
+            document.getElementById('resultsContainer').style.display = 'none';
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
