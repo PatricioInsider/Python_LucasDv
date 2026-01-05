@@ -1,0 +1,21 @@
+# Dependencias para Chatbot por Voz
+# Instalación: pip install -r requirements.txt
+
+# Reconocimiento de voz (usa Google Speech Recognition API)
+SpeechRecognition>=3.10.0
+
+# Síntesis de voz (Text-to-Speech)
+gTTS>=2.3.0
+
+# Reproducción de audio
+pygame>=2.5.0
+
+# Dependencias del sistema de SpeechRecognition
+PyAudio>=0.2.13  # Opcional - solo si quieres usar micrófono local
+# Alternativa en Linux: sudo apt-get install portaudio19-dev python3-pyaudio
+
+# Para usar OpenAI GPT (opcional)
+# openai>=1.0.0
+
+# Utilidades
+python-dotenv>=1.0.0  # Para variables de entorno
