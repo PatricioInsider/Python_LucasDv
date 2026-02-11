@@ -24,7 +24,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-/data/data_house/house_prices.csv
+data/
 
 # Entornos virtuales
 venv/
