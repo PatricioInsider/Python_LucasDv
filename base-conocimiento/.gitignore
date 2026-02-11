@@ -1,1 +1,4 @@
 base-conocimiento/data/data_house/house_prices.csv/data
+data/
+venv/
+.venv/
