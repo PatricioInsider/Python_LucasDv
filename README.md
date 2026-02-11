@@ -1,2 +1,3 @@
 # Python_LucasDv
-Practicas de Python de basico a profesional
+Practicas de Python todos los ejercicios que he tenido experiencia
+
