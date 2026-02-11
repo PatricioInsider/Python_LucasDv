@@ -1,0 +1,62 @@
+# ============================================================================
+# REQUISITOS PARA ASISTENTE DE LECTURA Y ANÁLISIS DE DOCUMENTOS
+# ============================================================================
+
+# Variables de entorno
+python-dotenv>=1.0.0
+
+# ============================================================================
+# FASE A: OCR (Reconocimiento Óptico de Caracteres)
+# ============================================================================
+
+# Tesseract OCR
+pytesseract>=0.3.10
+
+# PaddleOCR
+paddleocr>=2.7.0
+paddlepaddle>=2.6.0
+
+# EasyOCR (alternativa Python pura, recomendado para Windows)
+easyocr>=1.7.0
+
+# Procesamiento de imágenes
+Pillow>=10.0.0
+opencv-python>=4.8.0
+numpy>=1.24.0
+
+# ============================================================================
+# FASE B: NLP (Procesamiento de Lenguaje Natural)
+# ============================================================================
+
+# NLTK
+nltk>=3.8.0
+
+# spaCy
+spacy>=3.7.0
+
+# ============================================================================
+# FASE C: LLM (Modelo de Lenguaje)
+# ============================================================================
+
+# Cliente OpenAI (compatible con LM Studio)
+openai>=1.0.0
+
+# ============================================================================
+# FASE D: TTS (Síntesis de Voz)
+# ============================================================================
+
+# Text-to-Speech offline
+pyttsx3>=2.90
+
+# Text-to-Speech online
+gTTS>=2.3.0
+
+# Reproducción de audio
+pygame>=2.5.0
+
+# ============================================================================
+# UTILIDADES
+# ============================================================================
+
+# Colores en terminal
+colorama>=0.4.6
